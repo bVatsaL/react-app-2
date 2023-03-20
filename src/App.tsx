@@ -10,7 +10,7 @@ const App: React.FC = () => {
   useEffect(
     () => {
       (async () => {
-        const responseToken = await fetch('/token');
+        const responseToken = await fetch(`${API_URL}/token`);
         const { token } = await responseToken.json();
         await prismatic.init();
         try {
