@@ -1,10 +1,28 @@
-import { BaseSyntheticEvent, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
 import "./App.css";
+import prismatic from "@prismatic-io/embedded";
 
 const API_URL = process.env.API_URL || 'https://app2-5gbx.onrender.com';
 
 const App: React.FC = () => {
   const [items, setItems] = useState([]);
+
+  useEffect(
+    () => {
+      (async () => {
+        const responseToken = await fetch('/token');
+        const { token } = await responseToken.json();
+        await prismatic.init();
+        try {
+          const response = await prismatic.authenticate({ token });
+          console.log('response', response);
+        } catch (ex) {
+          console.log('error', ex);
+        }
+      })();
+    },
+    [],
+  );
 
   const getItems = () => {
     fetch(`${API_URL}/api`)
@@ -18,11 +36,17 @@ const App: React.FC = () => {
       .then((result) => setItems(result.data));
   };
 
+  const openMarketplace = () => {
+    prismatic.showMarketplace({
+      usePopover: true,
+    });
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <div>
-          <div>Items storege</div>
+          <div>Items storage</div>
           <button
             className="buttonStyle"
             type="button"
@@ -36,6 +60,13 @@ const App: React.FC = () => {
             onClick={clearItems}
           >
             Clear storage
+          </button>
+          <button
+            className="buttonStyle"
+            type="button"
+            onClick={openMarketplace}
+          >
+            Marketplace
           </button>
         </div>
         <div>
