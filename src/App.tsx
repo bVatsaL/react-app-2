@@ -31,7 +31,7 @@ const App: React.FC = () => {
   };
 
   const clearItems = (e: BaseSyntheticEvent) => {
-    fetch(`${API_URL}/api/clear`)
+    fetch(`${API_URL}/api/clear`, { method: 'DELETE' })
       .then((res) => res.json())
       .then((result) => setItems(result.data));
   };
